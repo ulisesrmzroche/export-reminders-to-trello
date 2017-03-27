@@ -18,7 +18,6 @@ const postCard = reminder => new Promise((resolve, reject) => {
 });
 
 const readReminders = () => {
-  console.log(ENV);
   return new Promise((resolve, reject) => {
     return fs.readFile(`${ENV.ROOT_PATH}/dist/reminders.json`, 'utf8', (err, data) => {
       console.log(data)
