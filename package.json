@@ -1,0 +1,40 @@
+{
+  "name": "reminders-export-backlog-trello",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "yarn run build && yarn run export-reminders && yarn run export-to-trello",
+    "debug": "osascript -il JavaScript ./src/index.js",
+    "setup": "rm -rf tmp dist && mkdir dist && touch dist/reminders.json && echo '{\"reminders\": []}' > ./dist/reminders.json",
+    "build": "yarn run setup && webpack --config ./config/webpack.config.js",
+    "export-to-trello": "node dist/bundle.trello.js",
+    "export-reminders": "osascript -l JavaScript dist/bundle.osx.js"
+  },
+  "author": "ulisesrmzroche",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "chalk": "^1.1.3",
+    "del": "^2.2.2",
+    "dotenv": "^4.0.0",
+    "eslint": "^3.14.1",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.9.0",
+    "figlet": "^1.2.0",
+    "json-loader": "^0.5.4",
+    "webpack": "2.2.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "node-trello": "^1.1.2",
+    "ora": "^1.1.0"
+  }
+}
