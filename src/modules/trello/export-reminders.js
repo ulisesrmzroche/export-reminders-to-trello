@@ -13,9 +13,15 @@ const postCard = reminder => new Promise((resolve, reject) => {
     idList: ENV.INTEGRATIONS.trello.targetList,
   }, (err, data) => {
     if (err) return reject(err);
+    console.log('data', data);
     return resolve(data);
   });
 });
+
+
+const addCheckListToCard = (card) => {
+
+};
 
 const readReminders = () => {
   return new Promise((resolve, reject) => {
