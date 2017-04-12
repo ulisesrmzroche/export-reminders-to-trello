@@ -13,44 +13,55 @@ const postCard = reminder => new Promise((resolve, reject) => {
     idList: ENV.INTEGRATIONS.trello.targetList,
   }, (err, data) => {
     if (err) return reject(err);
-    console.log('data', data);
     return resolve(data);
   });
 });
 
-
-const addCheckListToCard = (card) => {
-
+const addCheckListToCard = (checklist, card) => {
+  const endpoint = `/1/cards/${card.id}/checklists`;
+  const _checklist = checklist || {
+    name: 'Requirements',
+  };
+  return new Promise((resolve, reject) => t.post(endpoint, _checklist, (err, data) => {
+    if (err) return reject(err);
+    return resolve(data);
+  }));
 };
 
-const readReminders = () => {
-  return new Promise((resolve, reject) => {
-    return fs.readFile(`${ENV.ROOT_PATH}/dist/reminders.json`, 'utf8', (err, data) => {
-      console.log(data)
-      if (err) return reject(err);
-      const json = JSON.parse(data);
-      console.log(json)
-      return resolve(json);
-    });
+const addCheckListsToCards = (cards) => {
+  console.log('Adding checklists to cards...');
+  const requests = [];
+  requests.push(cards.map(card => addCheckListToCard({
+    name: 'Requirements',
+  }, card)));
+  requests.push(cards.map(card => addCheckListToCard({
+    name: 'TODO',
+  }, card)));
+  return Promise.all(requests);
+};
+
+const readReminders = () => new Promise((resolve, reject) => {
+  console.log('Reading reminders...');
+  fs.readFile(`${ENV.ROOT_PATH}/dist/reminders.json`, 'utf8', (err, data) => {
+    if (err) return reject(err);
+    const json = JSON.parse(data);
+    return resolve(json.reminders);
   });
+});
+
+const exportReminders = (reminders) => {
+  console.log('Exporting reminders...');
+  return Promise.all(reminders.map(reminder => postCard(reminder)));
 };
 
 export default () => {
   readReminders()
-  .then((remindersJSON) => {
-    const reminders = [];
-    remindersJSON.reminders.forEach((reminder) => {
-      reminders.push(postCard(reminder));
-    });
-    return reminders;
+  .then(reminders => exportReminders(reminders))
+  .then(cards => addCheckListsToCards(cards))
+  .then(() => {
+    console.log('made all this stuf!');
   })
-  .then((_reminders)=>{
-    return Promise.all(_reminders)
-    .then(() => {
-      console.log('made all this stuf!');
-    })
-    .catch(() => {
-      console.log('fail');
-    });
+  .catch(() => {
+    console.log('fail');
   });
 };
