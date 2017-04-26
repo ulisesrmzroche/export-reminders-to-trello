@@ -16,4 +16,15 @@ ENV.INTEGRATIONS.trello = {
   targetList: process.env.TRELLO_BACKLOG_LIST_ID,
 };
 
+
+const validate = () => {
+  // NOTE: Validator should be somewhere else
+  Object.keys(ENV.INTEGRATIONS.trello).forEach((key) => {
+    const _key = ENV.INTEGRATIONS.trello[key];
+    if (!_key) throw new Error(`Missing Key for Trello: ${key}`);
+  });
+};
+
+validate();
+
 module.exports = ENV;

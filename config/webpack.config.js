@@ -1,9 +1,11 @@
-const ENV = require('./environment');
+
 const webpack = require('webpack');
 const dotenv = require('dotenv');
 const _ = require('lodash');
 
 dotenv.load();
+
+const ENV = require('./environment');
 
 module.exports = {
   context: `${ENV.ROOT_PATH}`,
