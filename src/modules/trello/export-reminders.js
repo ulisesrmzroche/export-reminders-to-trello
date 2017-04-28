@@ -51,6 +51,10 @@ const readReminders = () => new Promise((resolve, reject) => {
 
 const exportReminders = (reminders) => {
   console.log('Exporting reminders...');
+  console.log('reminders', reminders)
+  if (!reminders.length) {
+    throw new Error("No reminders to export")
+  };
   return Promise.all(reminders.map(reminder => postCard(reminder)));
 };
 
@@ -61,7 +65,7 @@ export default () => {
   .then(() => {
     console.log('made all this stuf!');
   })
-  .catch(() => {
-    console.log('fail');
+  .catch((e) => {
+    console.log('Fail:', e);
   });
 };
