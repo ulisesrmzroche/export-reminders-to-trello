@@ -32,7 +32,6 @@ export const processReminders = (reminders) => {
       name: reminder.name().replace(/#backlog/g, ''),
       body: reminder.body(),
     };
-    console.log(`Creating reminder...: ${_reminder.name}`);
     _reminders.push(_reminder);
   });
   return _reminders;
